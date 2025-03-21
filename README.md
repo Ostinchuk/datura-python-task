@@ -202,4 +202,22 @@ While this README provides the overview, consider adding:
 - Discussion of design decisions and assumptions
 - Testing methodology
 
+## Final Section: Screen Recording Demonstration
+
+As a final step, please record a short screen demonstration that walks through your entire workflow. This recording should be included or linked in your GitHub submission (for example, you can upload the video directly or provide a link in your README). In the screen recording, please show:
+
+1. Cloning the repository and pulling it into a fresh environment.
+2. Starting the services (e.g., using docker-compose up --build or your local commands).
+3. Performing a sample request to GET /api/v1/tao_dividends with trade turned off (verify no stake or unstake is triggered).
+4. Performing another sample request with trade=true, with different combinations of netuid and hotkey (including leaving them blank).
+5. Observing/logging how the background tasks (sentiment analysis, staking extrinsic) behave.
+6. Briefly discussing your implementation:
+   - The structure of your code (folders, modules, etc.).
+   - Why you chose particular libraries or design patterns.
+   - Any tradeoffs or assumptions made during development.
+
+This demonstration helps us understand how everything works end to end and provides insight into your reasoning and implementation process. It also serves as a final confirmation that your solution is production-ready under the specified requirements.
+
+Good luck with the implementation! We look forward to reviewing your code and demonstration.
+
 Good luck with the implementation! We look forward to reviewing your code. This assignment is an opportunity to demonstrate not just that you can solve the problem, but that you write clean, production-ready code and can architect a solution that is scalable and maintainable. Have fun, and feel free to document any assumptions or choices you make along the way.
