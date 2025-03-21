@@ -1,7 +1,7 @@
 # Take-Home Coding Task – Senior Python Backend Engineer
 
 ## Overall Design
-This project implements an asynchronous API service that:
+This project should implement an asynchronous API service that:
 
 1. Provides an authenticated FastAPI endpoint to query Tao dividends from the Bittensor blockchain
 2. Caches blockchain query results in Redis for 2 minutes
@@ -24,13 +24,13 @@ The goal is a production-grade service that can handle ~1000 concurrent requests
 ## Objectives
 
 ### 1. Blockchain Data Endpoint (Tao Dividends Query & Stake)
-Overall goal:Implement an async API endpoint that returns blockchain data and optionally triggers a staking extrinsic based on an llm analysis of twitter sentiment:
+Overall goal: Implement an async API endpoint that returns blockchain data and optionally triggers a staking extrinsic based on an llm analysis of twitter sentiment:
 
 - **Async Blockchain Query**: Use Bittensor's AsyncSubtensor class here: https://github.com/opentensor/bittensor/blob/d6ad9f869c583b95250d8b86ab32bac2465651b2/bittensor/core/async_subtensor.py#L100 to query the chain state for TaoDividendsPerSubnet​ here: https://github.com/opentensor/subtensor/blob/b61dd30202ff6e970a18b5a5231b62183b6ba972/pallets/subtensor/src/lib.rs#L913. This query provides the "last total dividend for a hotkey on a subnet" given a netuid (subnet ID) and a hotkey (account). The call should be fully asynchronous (using asyncio and the provided async interface). Here is an example of how to construct the call and get the data: https://github.com/opentensor/async-substrate-interface/pull/84
 
 - **Caching Layer**: Store or cache the query result in Redis, so that subsequent requests for the same netuid+hotkey can be served quickly without hitting the chain repeatedly. You can use Redis both as a cache and as a message broker for background tasks (via Celery). Cache the result for 2 minutes by keys netuid and hotkey.
 
-- **Authenticated API Endpoint**: Expose the data through a FastAPI endpoint (e.g. GET /api/v1/tao_dividends?netuid=<id>&hotkey=<address>&trade=false). Both netuid and hotkey parameters are optional - if netuid is omitted, returns data for all netuids and their hotkeys; if hotkey is omitted, returns data for all hotkeys on the specified netuid. The trade parameter is optional and defaults to false. Netuid and hotkey defaults are provided below. Protect this endpoint with authentication (such as a Bearer token or OAuth2) so only authorized clients can access it.
+- **Authenticated API Endpoint**: Expose the data through a FastAPI endpoint (e.g. GET /api/v1/tao_dividends?netuid={id}&hotkey={address}&trade=false). Both netuid and hotkey parameters are optional - if netuid is omitted, returns data for all netuids and their hotkeys; if hotkey is omitted, returns data for all hotkeys on the specified netuid. The trade parameter is optional and defaults to false. Netuid and hotkey defaults are provided below. Protect this endpoint with authentication (such as a Bearer token or OAuth2) so only authorized clients can access it.
 
 - **Optional Stake Extrinsic & Sentiment-Based Adjustment**: When the endpoint is called with trade=true:
 
@@ -52,7 +52,7 @@ Overall goal:Implement an async API endpoint that returns blockchain data and op
        - add_stake: https://github.com/opentensor/bittensor/blob/d6ad9f869c583b95250d8b86ab32bac2465651b2/bittensor/core/async_subtensor.py#L2814
        - unstake: https://github.com/opentensor/bittensor/blob/d6ad9f869c583b95250d8b86ab32bac2465651b2/bittensor/core/async_subtensor.py#L3670
      - Use testnet for all operations
-     - Get testnet tokens by transferring up to 40 from wallet: "diamond like interest affair safe clarify lawsuit innocent beef van grief color"
+     - Get testnet tokens by transferring up to 40 tao from wallet: "diamond like interest affair safe clarify lawsuit innocent beef van grief color"
      - Can regenerate wallet using btcli: https://github.com/opentensor/btcli/blob/fe486075576e8c6bd1ed28783c7cfe893e340588/bittensor_cli/src/commands/wallets.py#L50
      - Can transfer tokens using: https://github.com/opentensor/btcli/blob/fe486075576e8c6bd1ed28783c7cfe893e340588/bittensor_cli/src/commands/wallets.py#L1106
      - Handle extrinsic responses asynchronously and log results
@@ -153,17 +153,15 @@ Make sure to include error responses in your documentation. For instance:
 ## Submission Instructions
 When you have completed the task, prepare the repository for review:
 
-1. **Push to GitHub**: Ensure all your code is committed and pushed to a public GitHub repository (if this repo was private, you can create a private repo and invite the reviewers or provide a link as instructed). Double-check that no sensitive information is in the repo.
+1. **Push to GitHub**: Ensure all your code is committed and pushed to a public GitHub repository. Double-check that no sensitive information is in the repo.
 
-2. **Review README**: Update this README.md if needed to reflect any changes or assumptions you made. Ensure the setup instructions are accurate and that someone else can follow them to run your project.
+2. **Review README**: Create a clear README.md file that describes the project, its purpose, and how to run it. Ensure the setup instructions are accurate and that someone else can follow them to run your project.
 
-3. **Provide Access**: If the repository is private, grant access to the hiring team or share the repository link if public. If you used any third-party services that require credentials (Datura, Chutes), you might include instructions for the reviewer to obtain their own API keys or possibly include a limited-use key if permitted (but it's preferable not to expose any keys publicly).
+3. **Pull Requests**: If you utilized a PR workflow, ensure those PRs are merged to your main branch.
 
-4. **Pull Requests (if used)**: If you utilized a PR workflow, ensure those PRs are merged or accessible. It can be helpful to keep them open for review to show your commit-by-commit progress and thought process. In your submission communication (email or portal), you can mention that you've included multiple commits and PRs for easier review.
+4. **Final Checklist**: Make sure the project builds and runs without errors in a fresh environment (try re-running the Docker setup from scratch to catch any missing steps). Run the tests one last time to ensure everything passes.
 
-5. **Final Checklist**: Make sure the project builds and runs without errors in a fresh environment (try re-running the Docker setup from scratch to catch any missing steps). Run the tests one last time to ensure everything passes.
-
-After submitting, the team will review your code for correctness, completeness relative to the requirements, code quality, and how you approached the task. They will also likely run the service and tests. Good documentation (both in-code and in the README) will help them understand your work quickly.
+After submitting, we will review your code for correctness, completeness relative to the requirements, code quality, and how you approached the task. They will also run the service and tests. Good documentation (both in-code and in the README) will help us understand your work quickly.
 
 ## Bonus / Stretch Goals
 If you have extra time or want to showcase additional skills, consider the following optional enhancements. These are not required, but going above and beyond can make your submission stand out:
@@ -205,4 +203,3 @@ While this README provides the overview, consider adding:
 - Testing methodology
 
 Good luck with the implementation! We look forward to reviewing your code. This assignment is an opportunity to demonstrate not just that you can solve the problem, but that you write clean, production-ready code and can architect a solution that is scalable and maintainable. Have fun, and feel free to document any assumptions or choices you make along the way.
-
