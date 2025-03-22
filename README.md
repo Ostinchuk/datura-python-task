@@ -1,5 +1,7 @@
 # Take-Home Coding Task – Senior Python Backend Engineer
 
+**DO NOT COMMIT TO THIS REPO -- MAKE YOUR OWN REPO**
+
 ## Overall Design
 This project should implement an asynchronous API service that:
 
