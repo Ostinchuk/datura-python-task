@@ -155,7 +155,7 @@ Make sure to include error responses in your documentation. For instance:
 ## Submission Instructions
 When you have completed the task, prepare the repository for review:
 
-1. **Push to GitHub**: Ensure all your code is committed and pushed to a public GitHub repository. Double-check that no sensitive information is in the repo.
+1. **Push to GitHub**: Ensure all your code is committed and pushed to a public GitHub repository ON YOUR OWN ACCOUNT. Double-check that no sensitive information is in the repo.
 
 2. **Review README**: Create a clear README.md file that describes the project, its purpose, and how to run it. Ensure the setup instructions are accurate and that someone else can follow them to run your project.
 
