@@ -99,7 +99,7 @@ Treat this project as if it were a real-world team repository. Make frequent com
 
 ## Project Setup and Usage
 Follow these steps to get your project up and running:
-1. **Create your own Repository**: Name it Datura-ai FastAPI Task.
+1. **Create your own Repository**: Name it bittensor-fast-api-task.
 
 2. **Build and Run with Docker**: Use Docker Compose to build and start all services:
    ```bash
