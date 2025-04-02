@@ -1,0 +1,23 @@
+[project]
+name = "bittensor-api-service"
+version = "0.1.0"
+description = "Async API service for Bittensor blockchain data with sentiment analysis"
+authors = [
+    {name = "Dima Ostapchuk",email = "ostapchukvox@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "bittensor (>=9.2.0,<10.0.0)",
+    "fastapi (>=0.110.1,<0.111.0)",
+    "uvicorn (>=0.34.0,<0.35.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.2"
+
