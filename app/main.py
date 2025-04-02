@@ -13,7 +13,7 @@ def read_root() -> dict[str, str]:
     return {"Hello": "World"}
 
 
-def main():
+def main() -> None:
     uvicorn.run(
         "main:app",
         host="127.0.0.1",
