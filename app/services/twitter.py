@@ -3,7 +3,7 @@ from typing import Any, Optional
 import httpx
 from app.core.settings import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("twitter_service")
 
 
 class TwitterService:
