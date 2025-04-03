@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.dividends import router
+from app.api.dividends import router as dividends_router
 from app.core.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(dividends_router)
 
 
 @app.exception_handler(Exception)
@@ -44,7 +44,7 @@ async def health_check() -> dict[str, str]:
 def main() -> None:
     uvicorn.run(
         "app.main:app",
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=8000,
         workers=2,
         reload=settings.UVICORN_RELOAD,

@@ -18,7 +18,7 @@ cache_service = CacheService(url=settings.CACHE_SERVER_URL)
 
 async def verify_token(token: str = Depends(oauth2_scheme)) -> str:
     """Verify the authentication token."""
-    if token != settings.API_TOKEN:
+    if token != settings.API_TOKEN.get_secret_value():
         raise HTTPException(
             status_code=401,
             detail="Invalid authentication token",
@@ -48,15 +48,18 @@ async def get_tao_dividends(
 
         cached_result = await cache_service.get(cache_key)
         if cached_result:
-            return TaoDividendResponse(**cached_result, cached=True)
+            return TaoDividendResponse(**cached_result)
 
         result = await blockchain_service.query_tao_dividends(
             netuid=netuid, hotkey=hotkey
         )
 
+        data_to_cache = result.model_dump()
+        data_to_cache["cached"] = True
+
         await cache_service.set(
             key=cache_key,
-            value=result.model_dump(),
+            value=data_to_cache,
             ttl=120,
         )
 
