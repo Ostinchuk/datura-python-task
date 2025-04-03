@@ -44,21 +44,21 @@ async def get_tao_dividends(
     - If trade=true, triggers a background task to analyze sentiment and stake/unstake
     """
     try:
-        cache_key = f"dividends:{netuid or 'all'}:{hotkey or 'all'}"
+        # cache_key = f"dividends:{netuid or 'all'}:{hotkey or 'all'}"
 
-        cached_result = await cache_service.get(cache_key)
-        if cached_result:
-            return TaoDividendResponse(**cached_result, cached=True)
+        # cached_result = await cache_service.get(cache_key)
+        # if cached_result:
+        #     return TaoDividendResponse(**cached_result, cached=True)
 
         result = await blockchain_service.query_tao_dividends(
             netuid=netuid, hotkey=hotkey
         )
 
-        await cache_service.set(
-            key=cache_key,
-            value=result.model_dump(),
-            ttl=120,
-        )
+        # await cache_service.set(
+        #     key=cache_key,
+        #     value=result.model_dump(),
+        #     ttl=120,
+        # )
 
         # TODO: Implement sentiment analysis and trading logic
         if trade:

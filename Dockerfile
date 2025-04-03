@@ -1,27 +1,60 @@
-FROM python:3.12-alpine as builder
+# syntax=docker/dockerfile:1
+###############################
+# Build Stage
+###############################
+FROM python:3.12-slim AS builder
 
-ARG INSTALL_DEBUGPY
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/.poetry
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install poetry==2.1.1
+ENV POETRY_VERSION=2.1.1
+RUN curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+ENV PATH="/root/.local/bin:${PATH}"
+
+WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
+RUN poetry self add poetry-plugin-export
+RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
 
-RUN poetry install --no-root;
+###############################
+# Runtime Stage
+###############################
+FROM python:3.12-slim
 
-FROM python:3.12-alpine as runtime
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    rustc \
+    cargo \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=builder /app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    apt-get purge -y rustc cargo && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY app/ ./app
 
 EXPOSE 8000
 
-ENV VIRTUAL_ENV=.venv \
-    PATH=/home/demo/app/.venv/bin:$PATH
+ENV GUNICORN_WORKERS=4
+ENV UVICORN_RELOAD=false
 
-COPY --from=builder /home/demo/app/${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
-COPY . .
-
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD exec gunicorn app.main:app \
+    -k uvicorn.workers.UvicornWorker \
+    --bind 0.0.0.0:8000 \
+    --workers ${GUNICORN_WORKERS} \
+    --log-level ${LOG_LEVEL} \
+    ${UVICORN_RELOAD:+--reload}
