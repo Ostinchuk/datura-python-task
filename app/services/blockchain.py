@@ -8,7 +8,7 @@ from bittensor.core.settings import SS58_FORMAT
 
 from app.schemas.blockchain import TaoDividendResponse
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("blockchain_service")
 
 
 class BlockchainService:
