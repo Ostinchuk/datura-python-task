@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: datura-app
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6-alpine
+    container_name: datura-redis
+    ports:
+      - "6379:6379"

@@ -48,15 +48,18 @@ async def get_tao_dividends(
 
         cached_result = await cache_service.get(cache_key)
         if cached_result:
-            return TaoDividendResponse(**cached_result, cached=True)
+            return TaoDividendResponse(**cached_result)
 
         result = await blockchain_service.query_tao_dividends(
             netuid=netuid, hotkey=hotkey
         )
 
+        data_to_cache = result.model_dump()
+        data_to_cache["cached"] = True
+
         await cache_service.set(
             key=cache_key,
-            value=result.model_dump(),
+            value=data_to_cache,
             ttl=120,
         )
 
