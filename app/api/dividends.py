@@ -1,16 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
 
+import logging
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.security import OAuth2PasswordBearer
+
+from app.core.settings import settings
 from app.schemas.blockchain import TaoDividendResponse
 from app.services.blockchain import BlockchainService
 from app.services.cache import CacheService
-from app.core.settings import settings
 
 router = APIRouter(prefix="/api/v1", tags=["blockchain"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+logger = logging.getLogger("dividends_api")
 
 blockchain_service = BlockchainService(network_endpoint=settings.BLOCKCHAIN_SERVICE_URL)
 cache_service = CacheService(url=settings.CACHE_SERVER_URL)
@@ -65,7 +68,10 @@ async def get_tao_dividends(
 
         # TODO: Implement sentiment analysis and trading logic
         if trade:
-            pass
+            # analyze_sentiment_and_trade is a Celery task
+            logger.info(
+                f"Triggering sentiment analysis and trading for netuid {netuid}, hotkey {hotkey}"
+            )
 
         return result
 

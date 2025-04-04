@@ -84,10 +84,20 @@ class BlockchainService:
             cached=False,
         )
 
-    async def stake_tao(self) -> Any:
-        """Stake TAO tokens for a hotkey on a subnet."""
-        pass
+    async def stake_tao(
+        self,
+        amount_tao: float,
+        hotkey: str = "5FFApaS75bv5pJHfAp2FVLBj9ZaXuFDjEypsaBNc1wCfe52v",
+        netuid: int = 18,
+    ) -> str | None:
+        logger.info("Staking TAO...")
+        return
 
-    async def unstake_tao(self) -> Any:
-        """Unstake TAO tokens for a hotkey from a subnet."""
-        pass
+    async def unstake_tao(
+        self,
+        amount_tao: float,
+        hotkey: str = "5FFApaS75bv5pJHfAp2FVLBj9ZaXuFDjEypsaBNc1wCfe52v",
+        netuid: int = 18,
+    ) -> None:
+        logger.info("Unstaking TAO...")
+        return
