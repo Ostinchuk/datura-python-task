@@ -21,7 +21,7 @@ cp .env.example .env
 
 Use Docker Compose to build and start all services:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 The first build may take a few minutes as it installs all dependencies.
